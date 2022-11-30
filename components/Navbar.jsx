@@ -1,33 +1,102 @@
 'use client';
 
+import React, { useState, useEffect } from 'react';
+import { AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
 import { motion } from 'framer-motion';
 import styles from '../styles';
 import { navVariants } from '../utils/motion';
 
-const Navbar = () => (
-  <motion.nav
-    variants={navVariants}
-    initial='hidden'
-    whileInView='show'
-    className={`${styles.xPaddings} py-8 relative`}
+const Navbar = () => {
+  const [nav, setNav] = useState(false);
+  const [color, setColor] = useState('transparent');
+  const [textColor, setTextColor] = useState('white');
+
+  const handleNav = () => {
+    setNav(!nav);
+  };
+
+  useEffect(() => {
+    const changeColor = () => {
+      if (window.scrollY >= 90) {
+        setColor('#ffffff');
+        setTextColor('#000000');
+      } else {
+        setColor('transparent');
+        setTextColor('#ffffff');
+      }
+    };
+    window.addEventListener('scroll', changeColor);
+  }, []);
+
+  return (
+    <motion.nav
+      variants={navVariants}
+      initial="hidden"
+      whileInView="show"
+      className={`${styles.xPaddings} sm:py-10`}
     >
-    <div className='absolute w-[50%] inset-0 gradient-01'/>
-    <div className={`${styles.innerWidth} mx-auto flex justify-between gap-8`}>
-      <img 
-        src='/search.svg'
-        alt='search'
-        className='w-[24px] h-[24px] object-contain '
-      />
-      <h2 className='font-extrabold text-[24px] leading-[30px] text-white'>
-        METAVERSUS
-      </h2>
-      <img 
-        src='/menu.svg'
-        alt='menu'
-        className='w-[24px] h-[24px] object-contain '
-      />
-    </div>
-  </motion.nav>
-);
+      <div
+        style={{ backgroundColor: `${color}` }}
+        className="fixed left-0 top-0 w-full z-10 ease-in duration-300"
+      >
+        <div className="max-w-[1240px] m-auto flex justify-between items-center p-4 text-white">
+          <a href="/">
+            <h1 style={{ color: `${textColor}` }} className="font-bold text-2xl">
+              Captur
+            </h1>
+          </a>
+          <ul style={{ color: `${textColor}` }} className="hidden sm:flex">
+            <li className="p-4">
+              <a href="#explore">Explore</a>
+            </li>
+            <li className="p-4">
+              <a href="#update">Latest Update</a>
+            </li>
+            <li className="p-4">
+              <a href="#map">Map</a>
+            </li>
+            <li className="p-4">
+              <a href="#designer">Designer</a>
+            </li>
+          </ul>
+
+          {/* Mobile Button */}
+          <div onClick={handleNav} className="block sm:hidden z-10">
+            {nav ? (
+              <AiOutlineClose size={20} style={{ color: `${textColor}` }} />
+            ) : (
+              <AiOutlineMenu size={20} style={{ color: `${textColor}` }} />
+            )}
+          </div>
+          {/* Mobile Menu */}
+          <div
+            className={
+            nav
+              ? 'sm:hidden absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center w-full h-screen bg-black text-center ease-in duration-300'
+              : 'sm:hidden absolute top-0 left-[-100%] right-0 bottom-0 flex justify-center items-center w-full h-screen bg-black text-center ease-in duration-300'
+          }
+          >
+            <ul>
+              <li onClick={handleNav} className="p-4 mt-20 text-4xl hover:text-gray-500">
+                <a href="#explore">Explore</a>
+              </li>
+              <li onClick={handleNav} className="p-4 text-4xl hover:text-gray-500">
+                <a href="#update">Latest Update</a>
+              </li>
+              <li onClick={handleNav} className="p-4 text-4xl hover:text-gray-500">
+                <a href="#map">Map</a>
+              </li>
+              <li onClick={handleNav} className="p-4 text-4xl hover:text-gray-500">
+                <a href="#designer">Designer</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </motion.nav>
+  );
+};
 
 export default Navbar;
+
